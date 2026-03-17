@@ -44,3 +44,19 @@ This variant targets **remote-backend** mode so you can build entirely inside An
 - Confirm the Go entrypoints to expose (start/stop, config paths, logging).
 - Decide if you need a WebView UI; if yes, load `file:///android_asset/www/index.html` and proxy to the backend at `http://127.0.0.1:<port>`.
 - Add crash/health logging (e.g., Logcat + backend logs in `filesDir`). 
+
+## Architecture snapshot (remote-backend mode)
+```
+[ Android App ]
+   ├─ MainActivity (service controls, battery opt-out)
+   ├─ PicoService (foreground service + notification, keep-alive)
+   ├─ BootReceiver + WorkManager (restart on boot / periodic)
+   ├─ WebViewActivity (embedded UI, asset + remote backend)
+   └─ Assets/index.html (JS client)
+        ├─ GET /health  ──> Backend
+        └─ POST /v1/chat/completions ──> Backend
+
+[ Remote PicoClaw Gateway ]
+   ├─ /health, /ready
+   └─ /v1/chat/completions (OpenAI-compatible)
+```
