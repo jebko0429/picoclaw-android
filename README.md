@@ -54,6 +54,11 @@ This scaffold wires a foreground Android service to host the PicoClaw Go backend
    - Wi‑Fi toggles require `CHANGE_WIFI_STATE` (already declared); on Android 13+ may need `NEARBY_WIFI_DEVICES` for certain operations.
    - Mobile data toggling generally not allowed for third‑party apps; you can read state via `ConnectivityManager`.
 
+## Building on-device with Android Code Studio (mobile)
+- Android Code Studio typically lacks Go/gomobile. Build the AAR on a desktop, copy it into `app/libs/picoclaw.aar`, and uncomment the dependency in `app/build.gradle.kts`.
+- Ensure JDK 17 and Android SDK/NDK/Build Tools 34 are available in the app; if not, sideload those folders.
+- The project already declares all needed permissions and keep-alive helpers. Replace `app/src/main/assets/index.html` with your UI or point `WebViewActivity` to your local backend URL.
+
 ## Notes for this environment
 - This device lacks Go and full Android toolchains; perform `gomobile bind` and `gradlew` on a development machine (Linux/macOS/Windows with Android SDK).
 - `/sdcard` write is blocked for this app; keep assets inside app internal storage or download at runtime.
