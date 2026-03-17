@@ -26,6 +26,12 @@ class MainActivity : ComponentActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.status.text = if (PicoBridge.isAvailable()) {
+            "Bindings available"
+        } else {
+            "Bindings missing (place picoclaw.aar in app/libs)"
+        }
+
         binding.startServiceBtn.setOnClickListener {
             ContextCompat.startForegroundService(
                 this,

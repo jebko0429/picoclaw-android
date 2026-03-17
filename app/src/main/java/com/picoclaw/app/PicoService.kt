@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,9 +19,10 @@ class PicoService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(NOTIFICATION_ID, buildNotification())
         scope.launch {
-            // TODO: Initialize and start the gomobile-bound PicoClaw backend here.
-            // Example (after gomobile bind):
-            // PicoBridge.start(getApplicationContext().filesDir.absolutePath)
+            val ok = PicoBridge.start(applicationContext)
+            if (!ok) {
+                Log.w(TAG, "PicoBridge start failed; ensure picoclaw.aar is present and methods exported.")
+            }
         }
         return START_STICKY
     }
@@ -28,8 +30,10 @@ class PicoService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         scope.launch {
-            // TODO: Stop backend gracefully.
-            // PicoBridge.stop()
+            val ok = PicoBridge.stop()
+            if (!ok) {
+                Log.w(TAG, "PicoBridge stop failed; backend may not have been running.")
+            }
         }
         job.cancel()
     }
@@ -54,5 +58,6 @@ class PicoService : Service() {
     companion object {
         const val CHANNEL_ID = "pico_service"
         private const val NOTIFICATION_ID = 42
+        private const val TAG = "PicoService"
     }
 }
