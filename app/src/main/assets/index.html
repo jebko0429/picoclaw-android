@@ -252,16 +252,22 @@
       promptEl.value = "";
       addBubble(msg, "me");
       const cfg = getCfg();
-      const url = backendUrl(cfg) + "/chat";
+      const url = backendUrl(cfg) + "/v1/chat/completions";
       try {
         const res = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: msg }),
+          body: JSON.stringify({
+            model: "auto",
+            messages: [{ role: "user", content: msg }],
+          }),
         });
         if (!res.ok) throw new Error(res.statusText);
         const data = await res.json().catch(() => ({}));
-        const reply = data.reply || JSON.stringify(data);
+        const reply =
+          data.choices?.[0]?.message?.content ??
+          data.reply ??
+          JSON.stringify(data);
         addBubble(reply, "bot");
         log("Chat OK");
       } catch (e) {
