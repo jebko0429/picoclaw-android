@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import com.picoclaw.app.keepalive.PicoKeepAliveWorker
 
 class PicoApp : Application() {
     override fun onCreate() {
@@ -19,5 +20,7 @@ class PicoApp : Application() {
             val mgr = getSystemService(NotificationManager::class.java)
             mgr.createNotificationChannel(channel)
         }
+        // Re-schedule periodic keep-alive worker.
+        PicoKeepAliveWorker.schedule(this)
     }
 }

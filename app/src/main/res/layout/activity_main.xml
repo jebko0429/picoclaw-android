@@ -23,4 +23,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Stop service" />
+
+    <Button
+        android:id="@+id/openUiBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Open Web UI" />
 </LinearLayout>

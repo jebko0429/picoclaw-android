@@ -4,6 +4,9 @@ import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
+import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -29,16 +32,32 @@ class MainActivity : ComponentActivity() {
                 Intent(this, PicoService::class.java)
             )
             maybeRequestNotifications()
+            maybeRequestBatteryWhitelist()
         }
 
         binding.stopServiceBtn.setOnClickListener {
             stopService(Intent(this, PicoService::class.java))
+        }
+
+        binding.openUiBtn.setOnClickListener {
+            startActivity(Intent(this, WebViewActivity::class.java))
         }
     }
 
     private fun maybeRequestNotifications() {
         if (Build.VERSION.SDK_INT >= 33) {
             requestNotif.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
+
+    private fun maybeRequestBatteryWhitelist() {
+        val pm = getSystemService(PowerManager::class.java)
+        val pkg = packageName
+        if (!pm.isIgnoringBatteryOptimizations(pkg)) {
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                data = Uri.parse("package:$pkg")
+            }
+            startActivity(intent)
         }
     }
 }

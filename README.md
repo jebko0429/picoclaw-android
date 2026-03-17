@@ -6,6 +6,8 @@ This scaffold wires a foreground Android service to host the PicoClaw Go backend
 - Android app module (`app/`) with:
   - Foreground service `PicoService` (keeps process alive).
   - `MainActivity` start/stop buttons and notification permission request.
+  - WebView launcher (`WebViewActivity`) loading `app/src/main/assets/index.html` (replace with your built UI).
+  - Boot receiver to auto-start after reboot; WorkManager periodic keep-alive.
   - Manifest permissions for network/Wi‑Fi/foreground service/notifications.
 - Gradle setup (compileSdk/targetSdk 34, Kotlin 1.9.25).
 - Network security config allowing localhost cleartext for local HTTP, if you expose one.
@@ -35,17 +37,19 @@ This scaffold wires a foreground Android service to host the PicoClaw Go backend
      Picoclaw.stop()
      ```
    - Ensure the Go package exports functions with uppercase names for gomobile (e.g., `func Start(dataDir string)`).
-4) **Add icons**: provide `mipmap/ic_launcher` assets or let Android Studio generate them.
-5) **Build & run**:
+4) **Frontend (optional)**:
+   - Replace `app/src/main/assets/index.html` with your built web UI, or edit `WebViewActivity` to point to `http://127.0.0.1:<port>` served by the backend.
+5) **Add icons**: provide `mipmap/ic_launcher` assets or let Android Studio generate them.
+6) **Build & run**:
    ```bash
    cd picoclaw-android
    ./gradlew assembleDebug
    adb install app/build/outputs/apk/debug/app-debug.apk
    ```
-6) **Background survival**:
-   - The service uses `START_STICKY` + foreground notification. For OEMs with aggressive killing, consider `WorkManager` or a small `BroadcastReceiver` to restart after boot.
-   - Keep the notification channel importance LOW to avoid noise, but foreground service still needs a persistent icon.
-7) **Permissions**:
+7) **Background survival**:
+   - Uses `START_STICKY`, boot receiver (BOOT_COMPLETED), WorkManager periodic keep-alive, and battery-optimization whitelist prompt.
+   - Foreground notification is required; channel is LOW importance by default.
+8) **Permissions**:
    - Runtime: POST_NOTIFICATIONS (API 33+). Request in `MainActivity`.
    - Wi‑Fi toggles require `CHANGE_WIFI_STATE` (already declared); on Android 13+ may need `NEARBY_WIFI_DEVICES` for certain operations.
    - Mobile data toggling generally not allowed for third‑party apps; you can read state via `ConnectivityManager`.
