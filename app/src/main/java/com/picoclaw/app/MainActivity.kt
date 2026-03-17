@@ -26,11 +26,7 @@ class MainActivity : ComponentActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.status.text = if (PicoBridge.isAvailable()) {
-            "Bindings available"
-        } else {
-            "Bindings missing (place picoclaw.aar in app/libs)"
-        }
+        binding.status.text = "Backend URL: http://${PicoConfig.backendHost}:${PicoConfig.backendPort}"
 
         binding.startServiceBtn.setOnClickListener {
             ContextCompat.startForegroundService(
