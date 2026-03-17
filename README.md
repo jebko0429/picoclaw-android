@@ -9,6 +9,7 @@ This scaffold wires a foreground Android service to host the PicoClaw Go backend
   - WebView launcher (`WebViewActivity`) loading `app/src/main/assets/index.html` (replace with your built UI).
   - Boot receiver to auto-start after reboot; WorkManager periodic keep-alive.
   - Manifest permissions for network/Wi‑Fi/foreground service/notifications.
+  - Notification icon vector at `app/src/main/res/drawable/ic_stat_name.xml`.
 - Gradle setup (compileSdk/targetSdk 34, Kotlin 1.9.25).
 - Network security config allowing localhost cleartext for local HTTP, if you expose one.
 
