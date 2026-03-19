@@ -1,4 +1,3 @@
 <resources>
-    <string name="app_name">PicoClaw</string>
-    <string name="hello_message">PicoClaw Android project is ready.</string>
+    <string name="app_name">picoclaw_android</string>
 </resources>

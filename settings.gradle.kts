@@ -14,5 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PicoClawAndroid"
+rootProject.name = "picoclaw_android"
+
 include(":app")
