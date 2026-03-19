@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PicoClaw</string>
+    <string name="hello_message">PicoClaw Android project is ready.</string>
 </resources>
